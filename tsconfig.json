@@ -1,0 +1,31 @@
+// {
+//   "compilerOptions": {
+//     // "allowJs": true,
+//     "moduleResolution": "Node",
+//     "module": "AMD",
+//     "outFile": "static/all.js",
+//     "target": "ES2017",
+//     "lib": [
+//       "es2016",
+//       "dom",
+//     ],
+//   },
+//   "include": [
+//     // "./static/*.ts",
+//     // "./static/flash/*.ts",
+//     // "./static/extensions/*.ts",
+//     "./static/main.ts",
+//   ],
+// }
+
+
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "outFile": "dist/all.js",
+    "target": "ES2017",
+  },
+  "include": [
+    "./static/main.ts",
+  ]
+}
