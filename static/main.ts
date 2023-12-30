@@ -4,10 +4,11 @@ namespace Second {
 
 
 const kTilesPerSide = 15;
-const kPadding = '20px';
+const kPadding = '1em';
 const kBottomPanelHeight = '10vh';
-const kBoardSize = `min(calc(100vh - ${kBottomPanelHeight} - ${kPadding} * 2), calc(100vw - ${kPadding} * 2))`;
-const kTileSize = `calc(${kBoardSize} / ${kTilesPerSide / 2 + 2})`;
+const kBoardWidth = `min(calc(100vh - ${kBottomPanelHeight} - ${kPadding} * 2), calc(100vw - ${kPadding} * 2))`;
+const kBoardHeight = `calc(${kBoardWidth} + ${kBottomPanelHeight})`;
+const kTileSize = `calc(${kBoardWidth} / ${kTilesPerSide / 2 + 2})`;
 const kStorageSize = 7;
 
 const kIconUrls = [
@@ -19,22 +20,22 @@ const kIconUrls = [
   "noun-cherry-991775.svg",
   "noun-chili-peppers-991757.svg",
   "noun-cocktail-991788.svg",
-  "noun-cocktail-991797.svg",
+  // "noun-cocktail-991797.svg",
   "noun-doughnut-991778.svg",
   "noun-fish-991796.svg",
   "noun-garlic-991782.svg",
-  "noun-grapes-991771.svg",
-  "noun-meat-991793.svg",
+  // "noun-grapes-991771.svg",
+  // "noun-meat-991793.svg",
   "noun-pineapple-991766.svg",
   "noun-pizza-991789.svg",
   "noun-soda-991779.svg",
   "noun-strawberry-991758.svg",
   // "noun-tea-991763.svg",
-  // "noun-watermelon-991761.svg",
+  "noun-watermelon-991761.svg",
 ];
 
 
-// animals by IYIKON from <a href="https://thenounproject.com/browse/icons/term/animals/" target="_blank" title="animals Icons">Noun Project</a> (CC BY 3.0)
+// Icons by IYIKON from <a href="https://thenounproject.com/browse/icons/term/strawberry/" target="_blank" title="Strawberry Icons">Noun Project</a> (CC BY 3.0)
 
 class Tile extends HTMLElement {
   pos: Vec3;
@@ -59,43 +60,19 @@ class Tile extends HTMLElement {
     this._onmousedown = (e: PointerEvent) => {
       if (this.can_be_clicked()) {
         this.classList.add('stored');
-        update_store();
+        update_positions();
       }
     };
-    this.addEventListener('transitionstart', () => {
-      this.isTransitioning = true;
-    });
-    this.addEventListener('transitionend', () => {
-      this.isTransitioning = false;
-      this.style.transitionDuration = '0s';
-      maybe_remove_from_store();
-    });
   }
   connectedCallback() {
     this.addEventListener('pointerdown', this._onmousedown);
 
     this.appendChild(modifyTag(makeTag('img'), (img) => {
       (<HTMLImageElement>img).src = `./icons/${kIconUrls[this.kind]}`;
+      img.style.position = 'absolute';
       img.style.width = '100%';
       img.style.height = '100%';
-      img.style.objectFit = 'contain';
-      // img.style.filter = 'invert(1)';
     }));
-
-    // if (this.kind == 0) {
-    //   this.style.backgroundColor = '#a00';
-    // } else if (this.kind == 1) {
-    //   this.style.backgroundColor = '#0a0';
-    // } else if (this.kind == 2) {
-    //   this.style.backgroundColor = '#00a';
-    // } else if (this.kind == 3) {
-    //   this.style.backgroundColor = '#a0a';
-    // } else if (this.kind == 4) {
-    //   this.style.backgroundColor = '#0aa';
-    // } else if (this.kind == 5) {
-    //   this.style.backgroundColor = '#aa0';
-    // }
-    this.style.backgroundColor = '#fff';
   }
   disconnectedCallback() {
     this.removeEventListener('pointerdown', this._onmousedown);
@@ -134,37 +111,12 @@ class Tile extends HTMLElement {
 }
 customElements.define('second-tile', Tile);
 
-function update_store() {
+function update_positions() {
   let stored = <Array<Tile>>Array.from(document.querySelectorAll('.stored'));
   stored.sort((a, b) => {
     return (<Tile>a).kind - (<Tile>b).kind;
   });
-  let remaining = stored.length;
-  for (let i = 0; i < stored.length; ++i) {
-    let e = <HTMLElement>stored[i];
-    e.style.transitionDuration = '0.4s';
-    // e.style.top = `calc(${kBoardSize} + ${kPadding} + ${kTileSize} * 0.05)`;
-    e.style.top = ``;
-    e.style.bottom = `calc(${kTileSize} * -0.45)`;
-    e.style.left = `calc(${kStorageLeft} + ${i + 0.5} * ${kTileSize} * 1.1)`;
-  }
 
-  let arr = <Array<Tile>>Array.from(document.getElementsByTagName('second-tile'));
-  for (let tile of arr) {
-    const n = tile.number_blocking();
-    if (n === 0) {
-      tile.style.backgroundColor = 'white';
-    } else if (n === 1) {
-      tile.style.backgroundColor = '#666';
-    } else {
-      tile.style.backgroundColor = '#333';
-    }
-  }
-}
-
-export function maybe_remove_from_store() {
-  let stored = <Array<Tile>>Array.from(document.querySelectorAll('.stored'));
-  stored = stored.filter(x => !x.isTransitioning);
   let dict = {};
   for (let e of stored) {
     if (e.kind in dict) {
@@ -173,24 +125,49 @@ export function maybe_remove_from_store() {
       dict[e.kind] = [e];
     }
   }
+
   let toRemove = [];
   for (let k in dict) {
     if (dict[k].length >= 3) {
       for (let i = 0; i < 3; ++i) {
         toRemove.push(dict[k][i]);
+        dict[k][i].classList.remove('stored');
+        dict[k][i].classList.add('removed');
+        stored.splice(stored.indexOf(dict[k][i]), 1);
       }
     }
   }
-  if (toRemove.length === 0) {
-    return;
+
+  for (let i = 0; i < stored.length; ++i) {
+    let e = stored[i];
+    e.style.transitionDuration = '0.4s';
+    e.style.top = `calc(${kBoardWidth} + ${kTileSize} * 0.55)`;
+    e.style.left = `calc(${kStorageLeft} + ${i + 0.5} * ${kTileSize} * 1.1)`;
+    e.ontransitionend = () => {
+      e.style.transitionDuration = '0s';
+    };
   }
+
   for (let ele of toRemove) {
     ele.style.transitionDuration = '0.4s';
     ele.style.opacity = '0';
-    ele.classList.remove('stored');
-    ele.classList.add('removed');
+    ele.ontransitionend = () => {
+      ele.remove();
+    };
   }
-  update_store();
+
+  // Update lighting.
+  let arr = <Array<Tile>>Array.from(document.getElementsByTagName('second-tile'));
+  for (let tile of arr) {
+    const n = tile.number_blocking();
+    if (n === 0) {
+      tile.style.backgroundColor = '#fff';
+    } else if (n === 1) {
+      tile.style.backgroundColor = '#999';
+    } else {
+      tile.style.backgroundColor = '#666';
+    }
+  }
 }
 
 function shuffle(A) {
@@ -203,15 +180,15 @@ function shuffle(A) {
 }
 
 const kStorageWidth = `calc(${kTileSize} * ${kStorageSize} * 1.1)`;
-const kStorageLeft = `calc((${kBoardSize} - ${kStorageWidth}) / 2)`;
+const kStorageLeft = `calc((${kBoardWidth} - ${kStorageWidth}) / 2)`;
 
 export function main(docid) {
 
   let board = modifyTag(makeDiv(''), (div) => {
     // Make div the largest square that can fit on the board.
     div.style.position = 'absolute';
-    div.style.width = kBoardSize;
-    div.style.height = `calc(${kBoardSize} + ${kBottomPanelHeight})`;
+    div.style.width = kBoardWidth;
+    div.style.height = kBoardHeight;
     // Center div
     div.style.left = '50%';
     div.style.top = kPadding;
@@ -229,7 +206,7 @@ export function main(docid) {
     div.style.height = `calc(${kTileSize} * 1.1)`;
     // Center div
     div.style.left = kStorageLeft;
-    div.style.top = kBoardSize;
+    div.style.top = kBoardWidth;
     // Etc.
     div.style.border = '1px solid white';
     div.style.overflow = 'hidden';
@@ -263,8 +240,8 @@ export function main(docid) {
 
   let numRetries = 0;
   while (kinds.length > 0 && numRetries < 100) {
-    let x = Math.floor(Math.random() * (kTilesPerSide - 4)) + 2;
-    let y = Math.floor(Math.random() * (kTilesPerSide - 4)) + 2;
+    let x = Math.floor(Math.random() * (kTilesPerSide - 2)) + 1;
+    let y = Math.floor(Math.random() * (kTilesPerSide - 2)) + 1;
     let z = 0;
     let kind = kinds.pop();
     while (has_conflicts(x, y, z)) {
@@ -283,7 +260,7 @@ export function main(docid) {
     console.log('Failed to generate board.');
   }
 
-  update_store();
+  update_positions();
 }
 
 }  //  namespace Second
