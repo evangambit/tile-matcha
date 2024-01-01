@@ -1,6 +1,6 @@
 /// <reference path='./utils.ts' />
 
-namespace Second {
+namespace TileGame {
 
 
 const kTilesPerSide = 15;
@@ -46,16 +46,11 @@ class Tile extends HTMLElement {
     super();
     this.pos = pos;
     this.kind = kind;
-    this.style.boxSizing = 'border-box';
-    this.style.position = 'absolute';
     this.style.left = `calc(${kTileSize} / 2 * ${pos.x + 1.5 - pos.z * 0.03})`;
     this.style.top = `calc(${kTileSize} / 2 * ${pos.y + 1.5 + pos.z * 0.12})`;
-    this.style.zIndex = `${10 + pos.z}`;
+    this.style.zIndex = `${pos.z}`;
     this.style.width = kTileSize;
     this.style.height = kTileSize;
-    this.style.border = '1px solid black';
-    this.style.boxSizing = 'border-box';
-    this.style.transform = 'translate(-50%, -50%)';
 
     this._onmousedown = (e: PointerEvent) => {
       if (this.can_be_clicked()) {
@@ -69,9 +64,6 @@ class Tile extends HTMLElement {
 
     this.appendChild(modifyTag(makeTag('img'), (img) => {
       (<HTMLImageElement>img).src = `./icons/${kIconUrls[this.kind]}`;
-      img.style.position = 'absolute';
-      img.style.width = '100%';
-      img.style.height = '100%';
     }));
   }
   disconnectedCallback() {
@@ -170,21 +162,12 @@ function update_positions() {
   }
 }
 
-function shuffle(A) {
-  for (let i = A.length - 1; i > 0; --i) {
-    let j = Math.floor(Math.random() * (i + 1));
-    let tmp = A[i];
-    A[i] = A[j];
-    A[j] = tmp;
-  }
-}
-
 const kStorageWidth = `calc(${kTileSize} * ${kStorageSize} * 1.1)`;
 const kStorageLeft = `calc((${kBoardWidth} - ${kStorageWidth}) / 2)`;
 
-export function main(docid) {
+export function main() {
 
-  let board = modifyTag(makeDiv(''), (div) => {
+  let board = modifyTag(makeTag('div', ''), (div) => {
     // Make div the largest square that can fit on the board.
     div.style.position = 'absolute';
     div.style.width = kBoardWidth;
@@ -198,7 +181,7 @@ export function main(docid) {
   });
   document.body.appendChild(board);
 
-  let storage = modifyTag(makeDiv(''), (div) => {
+  let storage = modifyTag(makeTag('div', ''), (div) => {
     // Make div the largest square that can fit on the board.
     div.style.position = 'absolute';
     div.style.width = kStorageWidth;
@@ -263,4 +246,4 @@ export function main(docid) {
   update_positions();
 }
 
-}  //  namespace Second
+}  //  namespace TileGame

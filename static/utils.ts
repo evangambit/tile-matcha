@@ -1,4 +1,4 @@
-namespace Second {
+namespace TileGame {
 
 export function makeTag(tag: string, innerHTML: string = '', style: Object = {}, attr: Object = {}) {
   let r = document.createElement(tag);
@@ -17,28 +17,6 @@ export function modifyTag(tag: HTMLElement, f: (tag: HTMLElement) => void) {
   return tag;
 }
 
-export function makeDiv(innerHTML: string, style: Object = {}, attr: Object = {}) {
-  return <HTMLDivElement>makeTag('DIV', innerHTML, style, attr);
-}
-
-export function open_url_in_tab(url: string) {
-  window.open(url, '_blank');
-}
-
-// Immutable.
-export class Vec2 {
-  x: number;
-  y: number;
-  constructor(x: number, y: number) {
-    this.x = x;
-    this.y = y;
-  }
-  toString() {
-    return `(${this.x}, ${this.y})`;
-  }
-}
-
-// Immutable.
 export class Vec3 {
   x: number;
   y: number;
@@ -50,6 +28,15 @@ export class Vec3 {
   }
   toString() {
     return `(${this.x}, ${this.y}, ${this.z})`;
+  }
+}
+
+export function shuffle(A) {
+  for (let i = A.length - 1; i > 0; --i) {
+    let j = Math.floor(Math.random() * (i + 1));
+    let tmp = A[i];
+    A[i] = A[j];
+    A[j] = tmp;
   }
 }
 
