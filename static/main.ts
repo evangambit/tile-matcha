@@ -4,7 +4,7 @@ namespace TileGame {
 
 
 const kTilesPerSide = 15;
-const kPadding = '1em';
+const kPadding = '1.5em';
 const kBottomPanelHeight = '10vh';
 const kBoardWidth = `min(calc(100vh - ${kBottomPanelHeight} - ${kPadding} * 2), calc(100vw - ${kPadding} * 2))`;
 const kBoardHeight = `calc(${kBoardWidth} + ${kBottomPanelHeight})`;
@@ -30,8 +30,6 @@ const kIconUrls = [
   "noun-watermelon-991761.svg",
 ];
 
-
-// Icons by IYIKON from <a href="https://thenounproject.com/browse/icons/term/strawberry/" target="_blank" title="Strawberry Icons">Noun Project</a> (CC BY 3.0)
 
 class Tile extends HTMLElement {
   pos: Vec3;
@@ -161,6 +159,21 @@ const kStorageWidth = `calc(${kTileSize} * ${kStorageSize} * 1.1)`;
 const kStorageLeft = `calc((${kBoardWidth} - ${kStorageWidth}) / 2)`;
 
 export function main() {
+  document.body.appendChild(modifyTag(makeTag('div', '', {
+    position: 'absolute',
+    top: '0.25em',
+    right: '0.25em',
+  }, {}), (element: HTMLElement) => {
+    element.innerHTML = `Icons by IYIKON from <a href="https://thenounproject.com/browse/icons/term/strawberry/" target="_blank" title="Strawberry Icons">Noun Project</a> (CC BY 3.0)`;
+  }));
+
+  document.body.appendChild(modifyTag(makeTag('div', '', {
+    position: 'absolute',
+    bottom: '0.25em',
+    right: '0.25em',
+  }, {}), (element: HTMLElement) => {
+    element.innerHTML = `Code by <a href="https://github.com/evangambit">Morgan Redding</a>`;
+  }));
 
   let board = modifyTag(makeTag('div'), (div) => {
     // Make div the largest square that can fit on the board.
