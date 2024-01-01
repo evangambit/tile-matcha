@@ -20,17 +20,13 @@ const kIconUrls = [
   "noun-cherry-991775.svg",
   "noun-chili-peppers-991757.svg",
   "noun-cocktail-991788.svg",
-  // "noun-cocktail-991797.svg",
   "noun-doughnut-991778.svg",
   "noun-fish-991796.svg",
   "noun-garlic-991782.svg",
-  // "noun-grapes-991771.svg",
-  // "noun-meat-991793.svg",
   "noun-pineapple-991766.svg",
   "noun-pizza-991789.svg",
   "noun-soda-991779.svg",
   "noun-strawberry-991758.svg",
-  // "noun-tea-991763.svg",
   "noun-watermelon-991761.svg",
 ];
 
@@ -61,9 +57,8 @@ class Tile extends HTMLElement {
   }
   connectedCallback() {
     this.addEventListener('pointerdown', this._onmousedown);
-
-    this.appendChild(modifyTag(makeTag('img'), (img) => {
-      (<HTMLImageElement>img).src = `./icons/${kIconUrls[this.kind]}`;
+    this.appendChild(makeTag('img', '', {}, {
+      src: `./icons/${kIconUrls[this.kind]}`
     }));
   }
   disconnectedCallback() {
@@ -73,7 +68,7 @@ class Tile extends HTMLElement {
     if (document.getElementsByClassName('stored').length >= kStorageSize) {
       return 999;
     }
-    let tiles = <Array<Tile>>Array.from(document.getElementsByTagName('second-tile'));
+    let tiles = <Array<Tile>>Array.from(document.getElementsByTagName('tilegame-tile'));
     let r = 0;
     for (let tile of tiles) {
       if (tile.isTransitioning || tile === this) {
@@ -101,7 +96,7 @@ class Tile extends HTMLElement {
     return this.number_blocking() == 0;
   }
 }
-customElements.define('second-tile', Tile);
+customElements.define('tilegame-tile', Tile);
 
 function update_positions() {
   let stored = <Array<Tile>>Array.from(document.querySelectorAll('.stored'));
@@ -149,7 +144,7 @@ function update_positions() {
   }
 
   // Update lighting.
-  let arr = <Array<Tile>>Array.from(document.getElementsByTagName('second-tile'));
+  let arr = <Array<Tile>>Array.from(document.getElementsByTagName('tilegame-tile'));
   for (let tile of arr) {
     const n = tile.number_blocking();
     if (n === 0) {
@@ -167,7 +162,7 @@ const kStorageLeft = `calc((${kBoardWidth} - ${kStorageWidth}) / 2)`;
 
 export function main() {
 
-  let board = modifyTag(makeTag('div', ''), (div) => {
+  let board = modifyTag(makeTag('div'), (div) => {
     // Make div the largest square that can fit on the board.
     div.style.position = 'absolute';
     div.style.width = kBoardWidth;
@@ -181,7 +176,7 @@ export function main() {
   });
   document.body.appendChild(board);
 
-  let storage = modifyTag(makeTag('div', ''), (div) => {
+  let storage = modifyTag(makeTag('div'), (div) => {
     // Make div the largest square that can fit on the board.
     div.style.position = 'absolute';
     div.style.width = kStorageWidth;
@@ -197,7 +192,7 @@ export function main() {
   board.appendChild(storage);
 
   const has_conflicts = (x, y, z) => {
-    let arr = <Array<Tile>>Array.from(document.getElementsByTagName('second-tile'));
+    let arr = <Array<Tile>>Array.from(document.getElementsByTagName('tilegame-tile'));
     return arr.filter((tile) => {
       if (tile.pos.z !== z) {
         return false;
