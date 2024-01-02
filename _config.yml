@@ -1,4 +1,4 @@
 {
-  "source": ["."],
-  "exclude": ["static"]
+  "source": ["dist"],
+  "exclude": ["static", "tsconfig.json"]
 }

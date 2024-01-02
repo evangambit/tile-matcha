@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "outFile": "docs/all.js",
+    "outFile": "dist/all.js",
     "target": "ES2017",
   },
   "include": [
