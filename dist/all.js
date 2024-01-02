@@ -189,7 +189,7 @@ var TileGame;
             top: '0.25em',
             right: '0.25em',
         }, {}), (element) => {
-            element.innerHTML = `Icons by IYIKON from <a href="https://thenounproject.com/" target="_blank" title="Strawberry Icons">Noun Project</a> (CC BY 3.0)`;
+            element.innerHTML = `Icons by IYIKON from <a href="https://thenounproject.com/browse/icons/term/strawberry/" target="_blank" title="Strawberry Icons">Noun Project</a> (CC BY 3.0)`;
         }));
         document.body.appendChild(TileGame.modifyTag(TileGame.makeTag('div', '', {
             position: 'absolute',
