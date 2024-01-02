@@ -1,5 +1,7 @@
 /// <reference path='./utils.ts' />
 
+// Build with "$ sass static/css:dist && tsc"
+
 namespace TileGame {
 
 
@@ -164,7 +166,7 @@ export function main() {
     top: '0.25em',
     right: '0.25em',
   }, {}), (element: HTMLElement) => {
-    element.innerHTML = `Icons by IYIKON from <a href="https://thenounproject.com/browse/icons/term/strawberry/" target="_blank" title="Strawberry Icons">Noun Project</a> (CC BY 3.0)`;
+    element.innerHTML = `Icons by IYIKON from <a href="https://thenounproject.com/" target="_blank" title="Strawberry Icons">Noun Project</a> (CC BY 3.0)`;
   }));
 
   document.body.appendChild(modifyTag(makeTag('div', '', {
