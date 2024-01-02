@@ -1,2 +1,4 @@
-source: ["."]
-exclude: ["static"]
+{
+  "source": ["."],
+  "exclude": ["static"]
+}
