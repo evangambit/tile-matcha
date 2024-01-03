@@ -3,8 +3,8 @@
 namespace TileGame {
 
 
-const kTilesPerSide = 15;
-const kPadding = '1.5em';
+const kTilesPerSide = 13;
+const kPadding = '0.5em';
 const kBottomPanelHeight = '10vh';
 const kBoardWidth = `min(calc(100vh - ${kBottomPanelHeight} - ${kPadding} * 2), calc(100vw - ${kPadding} * 2))`;
 const kBoardHeight = `calc(${kBoardWidth} + ${kBottomPanelHeight})`;
@@ -12,22 +12,22 @@ const kTileSize = `calc(${kBoardWidth} / ${kTilesPerSide / 2 + 2})`;
 const kStorageSize = 7;
 
 const kIconUrls = [
-  "noun-apple-991791.svg",
-  "noun-banana-991759.svg",
-  "noun-cake-991787.svg",
-  "noun-candy-991790.svg",
-  "noun-cheese-991774.svg",
-  "noun-cherry-991775.svg",
-  "noun-chili-peppers-991757.svg",
-  "noun-cocktail-991788.svg",
-  "noun-doughnut-991778.svg",
-  "noun-fish-991796.svg",
-  "noun-garlic-991782.svg",
-  "noun-pineapple-991766.svg",
-  "noun-pizza-991789.svg",
-  "noun-soda-991779.svg",
-  "noun-strawberry-991758.svg",
-  "noun-watermelon-991761.svg",
+  "🐼",
+  "🦊",
+  "🐶",
+  "🐱",
+  "🐢",
+  "🦋",
+  "🐙",
+  "🦧",
+  "🐳",
+  "🐄",
+  "🐎",
+  "🦢",
+  "🦥",
+  "🦨",
+  "🐓",
+  "🦬",
 ];
 
 
@@ -45,6 +45,8 @@ class Tile extends HTMLElement {
     this.style.zIndex = `${pos.z}`;
     this.style.width = kTileSize;
     this.style.height = kTileSize;
+    this.style.overflow = 'hidden';
+    this.style.backgroundColor = 'white';
 
     this._onmousedown = (e: PointerEvent) => {
       if (this.can_be_clicked()) {
@@ -55,9 +57,12 @@ class Tile extends HTMLElement {
   }
   connectedCallback() {
     this.addEventListener('pointerdown', this._onmousedown);
-    this.appendChild(makeTag('img', '', {}, {
-      src: `./icons/${kIconUrls[this.kind]}`
-    }));
+    this.appendChild(makeTag('div', kIconUrls[this.kind], {
+      "font-size": `calc(${kTileSize})`,
+      "text-align": "center",
+      "position": "absolute",
+      "top": "-0.12em",
+    }, {}));
   }
   disconnectedCallback() {
     this.removeEventListener('pointerdown', this._onmousedown);
@@ -146,11 +151,11 @@ function update_positions() {
   for (let tile of arr) {
     const n = tile.number_blocking();
     if (n === 0) {
-      tile.style.backgroundColor = '#fff';
+      tile.style.filter = 'brightness(100%)';
     } else if (n === 1) {
-      tile.style.backgroundColor = '#999';
+      tile.style.filter = 'brightness(50%)';
     } else {
-      tile.style.backgroundColor = '#666';
+      tile.style.filter = 'brightness(25%)';
     }
   }
 }
@@ -161,18 +166,10 @@ const kStorageLeft = `calc((${kBoardWidth} - ${kStorageWidth}) / 2)`;
 export function main() {
   document.body.appendChild(modifyTag(makeTag('div', '', {
     position: 'absolute',
-    top: '0.25em',
-    right: '0.25em',
-  }, {}), (element: HTMLElement) => {
-    element.innerHTML = `Icons by IYIKON from <a href="https://thenounproject.com/browse/icons/term/strawberry/" target="_blank" title="Strawberry Icons">Noun Project</a> (CC BY 3.0)`;
-  }));
-
-  document.body.appendChild(modifyTag(makeTag('div', '', {
-    position: 'absolute',
     bottom: '0.25em',
     right: '0.25em',
   }, {}), (element: HTMLElement) => {
-    element.innerHTML = `Code by <a href="https://github.com/evangambit">Morgan Redding</a>`;
+    element.innerHTML = `Game by <a href="https://github.com/evangambit">Morgan Redding</a>`;
   }));
 
   let board = modifyTag(makeTag('div'), (div) => {
@@ -231,8 +228,8 @@ export function main() {
 
   let numRetries = 0;
   while (kinds.length > 0 && numRetries < 100) {
-    let x = Math.floor(Math.random() * (kTilesPerSide - 2)) + 1;
-    let y = Math.floor(Math.random() * (kTilesPerSide - 2)) + 1;
+    let x = Math.floor(Math.random() * (kTilesPerSide));
+    let y = Math.floor(Math.random() * (kTilesPerSide));
     let z = 0;
     let kind = kinds.pop();
     while (has_conflicts(x, y, z)) {
