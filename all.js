@@ -66,7 +66,7 @@ var TileGame;
         "🐓",
         "🦬",
         "🐿",
-        "🦔",
+        // "🦔",
     ];
     class Tile extends HTMLElement {
         constructor(pos, kind) {
@@ -81,6 +81,9 @@ var TileGame;
             this.style.overflow = 'hidden';
             this.style.backgroundColor = 'white';
             this._onmousedown = (e) => {
+                if (this.classList.contains('removed') || this.classList.contains('stored')) {
+                    return;
+                }
                 if (this.can_be_clicked()) {
                     this.classList.add('stored');
                     update_positions();
@@ -106,7 +109,7 @@ var TileGame;
             let tiles = Array.from(document.getElementsByTagName('tilegame-tile'));
             let r = 0;
             for (let tile of tiles) {
-                if (tile.isTransitioning || tile === this) {
+                if (tile === this) {
                     continue;
                 }
                 if (tile.classList.contains('stored')) {

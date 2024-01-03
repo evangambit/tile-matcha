@@ -36,7 +36,6 @@ const kIconUrls = [
 class Tile extends HTMLElement {
   pos: Vec3;
   kind: number;
-  isTransitioning: boolean;
   _onmousedown: (e: PointerEvent) => void;
   constructor(pos: Vec3, kind: number) {
     super();
@@ -51,6 +50,9 @@ class Tile extends HTMLElement {
     this.style.backgroundColor = 'white';
 
     this._onmousedown = (e: PointerEvent) => {
+      if (this.classList.contains('removed') || this.classList.contains('stored')) {
+        return;
+      }
       if (this.can_be_clicked()) {
         this.classList.add('stored');
         update_positions();
@@ -76,7 +78,7 @@ class Tile extends HTMLElement {
     let tiles = <Array<Tile>>Array.from(document.getElementsByTagName('tilegame-tile'));
     let r = 0;
     for (let tile of tiles) {
-      if (tile.isTransitioning || tile === this) {
+      if (tile === this) {
         continue;
       }
       if (tile.classList.contains('stored')) {
