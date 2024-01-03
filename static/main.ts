@@ -168,6 +168,12 @@ const kStorageWidth = `calc(${kTileSize} * ${kStorageSize} * 1.1)`;
 const kStorageLeft = `calc((${kBoardWidth} - ${kStorageWidth}) / 2)`;
 
 export function main() {
+  let seed = parseInt(new URLSearchParams(window.location.search).get('seed'));
+  if (!seed) {
+    seed = Math.random();
+  }
+  const rng = new RNG(seed);
+
   document.body.appendChild(modifyTag(makeTag('div', '', {
     position: 'absolute',
     top: '0.25em',
@@ -223,17 +229,17 @@ export function main() {
 
   let kinds = [];
   for (let i = 0; i < 20; ++i) {
-    const kind = Math.random() * kIconUrls.length | 0;
+    const kind = rng.next() * kIconUrls.length | 0;
     for (let j = 0; j < 3; ++j) {
       kinds.push(kind);
     }
   }
-  shuffle(kinds);
+  shuffle(kinds, rng);
 
   let numRetries = 0;
   while (kinds.length > 0 && numRetries < 100) {
-    let x = Math.floor(Math.random() * (kTilesPerSide));
-    let y = Math.floor(Math.random() * (kTilesPerSide));
+    let x = Math.floor(rng.next() * (kTilesPerSide));
+    let y = Math.floor(rng.next() * (kTilesPerSide));
     let z = 0;
     let kind = kinds.pop();
     while (has_conflicts(x, y, z)) {

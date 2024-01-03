@@ -12,6 +12,16 @@ var TileGame;
         return r;
     }
     TileGame.makeTag = makeTag;
+    class RNG {
+        constructor(seed) {
+            this.seed = seed;
+        }
+        next() {
+            let x = Math.sin(this.seed++) * 10000;
+            return x - Math.floor(x);
+        }
+    }
+    TileGame.RNG = RNG;
     function modifyTag(tag, f) {
         f(tag);
         return tag;
@@ -28,9 +38,9 @@ var TileGame;
         }
     }
     TileGame.Vec3 = Vec3;
-    function shuffle(A) {
+    function shuffle(A, rng) {
         for (let i = A.length - 1; i > 0; --i) {
-            let j = Math.floor(Math.random() * (i + 1));
+            let j = Math.floor(rng.next() * (i + 1));
             let tmp = A[i];
             A[i] = A[j];
             A[j] = tmp;
@@ -194,6 +204,11 @@ var TileGame;
     const kStorageWidth = `calc(${kTileSize} * ${kStorageSize} * 1.1)`;
     const kStorageLeft = `calc((${kBoardWidth} - ${kStorageWidth}) / 2)`;
     function main() {
+        let seed = parseInt(new URLSearchParams(window.location.search).get('seed'));
+        if (!seed) {
+            seed = Math.random();
+        }
+        const rng = new TileGame.RNG(seed);
         document.body.appendChild(TileGame.modifyTag(TileGame.makeTag('div', '', {
             position: 'absolute',
             top: '0.25em',
@@ -245,16 +260,16 @@ var TileGame;
         };
         let kinds = [];
         for (let i = 0; i < 20; ++i) {
-            const kind = Math.random() * kIconUrls.length | 0;
+            const kind = rng.next() * kIconUrls.length | 0;
             for (let j = 0; j < 3; ++j) {
                 kinds.push(kind);
             }
         }
-        TileGame.shuffle(kinds);
+        TileGame.shuffle(kinds, rng);
         let numRetries = 0;
         while (kinds.length > 0 && numRetries < 100) {
-            let x = Math.floor(Math.random() * (kTilesPerSide));
-            let y = Math.floor(Math.random() * (kTilesPerSide));
+            let x = Math.floor(rng.next() * (kTilesPerSide));
+            let y = Math.floor(rng.next() * (kTilesPerSide));
             let z = 0;
             let kind = kinds.pop();
             while (has_conflicts(x, y, z)) {

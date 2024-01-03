@@ -12,6 +12,17 @@ export function makeTag(tag: string, innerHTML: string = '', style: Object = {},
   return r;
 }
 
+export class RNG {
+  seed: number;
+  constructor(seed: number) {
+    this.seed = seed;
+  }
+  next() {
+    let x = Math.sin(this.seed++) * 10000;
+    return x - Math.floor(x);
+  }
+}
+
 export function modifyTag(tag: HTMLElement, f: (tag: HTMLElement) => void) {
   f(tag);
   return tag;
@@ -31,9 +42,9 @@ export class Vec3 {
   }
 }
 
-export function shuffle(A) {
+export function shuffle(A, rng: RNG) {
   for (let i = A.length - 1; i > 0; --i) {
-    let j = Math.floor(Math.random() * (i + 1));
+    let j = Math.floor(rng.next() * (i + 1));
     let tmp = A[i];
     A[i] = A[j];
     A[j] = tmp;
