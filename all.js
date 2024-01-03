@@ -42,7 +42,7 @@ var TileGame;
 var TileGame;
 (function (TileGame) {
     const kTilesPerSide = 13;
-    const kPadding = '0.5em';
+    const kPadding = '1.5em';
     const kBottomPanelHeight = '10vh';
     const kBoardWidth = `min(calc(100vh - ${kBottomPanelHeight} - ${kPadding} * 2), calc(100vw - ${kPadding} * 2))`;
     const kBoardHeight = `calc(${kBoardWidth} + ${kBottomPanelHeight})`;
