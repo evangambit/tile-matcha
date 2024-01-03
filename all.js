@@ -65,6 +65,8 @@ var TileGame;
         "🦨",
         "🐓",
         "🦬",
+        "🐿",
+        "🦔",
     ];
     class Tile extends HTMLElement {
         constructor(pos, kind) {
