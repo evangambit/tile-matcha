@@ -191,7 +191,7 @@ var TileGame;
     function main() {
         document.body.appendChild(TileGame.modifyTag(TileGame.makeTag('div', '', {
             position: 'absolute',
-            bottom: '0.25em',
+            top: '0.25em',
             right: '0.25em',
         }, {}), (element) => {
             element.innerHTML = `Game by <a href="https://github.com/evangambit">Morgan Redding</a>`;

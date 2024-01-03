@@ -166,7 +166,7 @@ const kStorageLeft = `calc((${kBoardWidth} - ${kStorageWidth}) / 2)`;
 export function main() {
   document.body.appendChild(modifyTag(makeTag('div', '', {
     position: 'absolute',
-    bottom: '0.25em',
+    top: '0.25em',
     right: '0.25em',
   }, {}), (element: HTMLElement) => {
     element.innerHTML = `Game by <a href="https://github.com/evangambit">Morgan Redding</a>`;
